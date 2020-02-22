@@ -5,7 +5,7 @@ import os
 
 ''' Module which will provide the required service for the application '''
 def isPython(filename):
-    if filename.endswith((".txt", ".py")):
+    if filename.endswith((".py")):
         return True
     else:
         try:
