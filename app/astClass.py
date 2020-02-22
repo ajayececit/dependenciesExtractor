@@ -5,6 +5,7 @@ class ASTAnalyser(ast.NodeVisitor):
     def __init__(self):
         self.dependencies = {"import" : [], "from" : []}
         self.duplicateDependencies = {"import" : [], "from" : []}
+        self.moduleUsed = []
         self.collections = {"variable" : [], "method" : [], "attribute" : []}
         self.lineNumber = []
 
@@ -22,9 +23,10 @@ class ASTAnalyser(ast.NodeVisitor):
 
     def visit_ImportFrom(self, node):
         for alias in node.names:
-            if alias.name not in self.dependencies["from"]:
+            if [node.module, alias.name] not in self.moduleUsed:
                 self.dependencies["from"].append(alias.name)
                 self.lineNumber.append([node.lineno, node.end_lineno])
+                self.moduleUsed.append([node.module, alias.name])
             else:
                 self.duplicateDependencies["from"].append(alias.name)
         self.generic_visit(node)
